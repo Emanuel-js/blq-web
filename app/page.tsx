@@ -1,113 +1,119 @@
-import Image from "next/image";
+'use client';
+import Header from "@/components/common/header";
+import DealPage from "@/components/home/Deal";
+import Shortcut from "@/components/home/Shortcut";
+import Banner from "@/components/home/banner";
+import { BANNERAPI, DEALAPI, SHORTCUT } from "@/config/api";
+import { useQuery } from "@tanstack/react-query";
+import { MdOutlineKeyboardArrowLeft,MdKeyboardArrowRight } from "react-icons/md";
 
 export default function Home() {
+
+  const { isLoading, error, data:bannerData } = useQuery({
+    queryKey: ['bannerData'],
+    queryFn: () =>
+      fetch(BANNERAPI).then((res) =>
+        res.json(),
+      ),
+  });
+
+  const { isLoading:shortCutLoading, data:shortCut } = useQuery({
+    queryKey: ['shortCut'],
+    queryFn: () =>
+      fetch(SHORTCUT).then((res) =>
+        res.json(),
+      ),
+  });
+
+  const { isLoading:dealLoading, data:deal } = useQuery({
+    queryKey: ['deal'],
+    queryFn: () =>
+      fetch(DEALAPI+'SINGLE').then((res) =>
+        res.json(),
+      ),
+  });
+
+
+
+  if (isLoading) return <div className="m-auto text-center">Loading...</div>;
+
+  if (error) return <div className="m-auto text-center text-red-300">An error has occurred:  { error.message}</div>
+
+
+ const productList =[
+  {
+    title:"HOT DEAL",
+    subTitle:"HAPPY HOUR"
+  },
+  {
+    title:"저렴한 거격과 보장된 성능, 더함 TV",
+    subTitle:"사은품 증정이벤트"
+  },
+  {
+    title:"판매량 TOP7 가성비 인기가전 모음",
+    subTitle:"가격,성능,디자인까지"
+  },
+  {
+    title:"성능보장, PC주변기기 & 스피커 추천",
+    subTitle:"#LG #앱코 #BOSE"
+
+  },
+  {
+    title:"품절임박! 마지막 수량 한정특가 상품",
+    subTitle:"고민하면 품절!"
+  },
+  {
+    title:"게임기기 최저가 & 신작 모음",
+    subTitle:"#한정수량 특가 #기대신작"
+
+  },
+  {
+    title:"New In",
+    subTitle:"#주목할만한신상품"
+
+  },
+  {
+    title:"로지텍 AS보장 정품 마우스/키보드 단독",
+    subTitle:"#병행수입 아닌 정품 제품으로 확실한 AS보장!"
+
+  },
+  {
+    title:"맥북 클리어런스 세일!",
+    subTitle:"오직 테스트밸리에서만! 30일 체험해보고 구매하자"
+
+  },
+ ]
+  
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <main className="">
+    <Header />
+    
+ <div className="pt-5">
+ {bannerData &&<Banner  banner={bannerData}/> }
+ </div>
+  <div className="pt-16">
+  {shortCut && <Shortcut shortcut={shortCut} />}
+  </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+{
+  productList.map((product,index)=>{
+    return  <div className="m-auto w-[100%] md:w-[75%]  pt-16" key={index}>
+ 
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+    {deal && <DealPage 
+    title={product.title}
+    subtitle={product.subTitle}
+    deals={deal.items} />}
+  </div>
+  
+  })
+}
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+<div className="pt-16"></div>
+ 
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
     </main>
   );
 }
