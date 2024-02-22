@@ -1,12 +1,14 @@
 import React, { useCallback, useRef } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper as SwiperComponent, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, Mousewheel } from "swiper/modules";
+import { Swiper } from 'swiper';
 import { BiShare } from "react-icons/bi";
 import {
   MdKeyboardArrowRight,
   MdOutlineKeyboardArrowLeft,
 } from "react-icons/md";
 import { IoIosStar } from "react-icons/io";
+import Image from "next/image";
 
 
 
@@ -24,16 +26,15 @@ const DealList: React.FC<{ deals: any[],title:string,subtitle:string }> = ({ dea
     );
   };
 
-  const swiperRef = useRef(null);
+  const swiperRef = useRef<any | null>(null);
 
+ 
   const handlePrev = useCallback(() => {
-    if (!swiperRef.current) return;
-    swiperRef.current.swiper.slidePrev();
+    swiperRef.current?.swiper.slidePrev();
   }, []);
 
   const handleNext = useCallback(() => {
-    if (!swiperRef.current) return;
-    swiperRef.current.swiper.slideNext();
+    swiperRef.current?.swiper.slideNext();
   }, []);
 
   return (
@@ -59,7 +60,7 @@ const DealList: React.FC<{ deals: any[],title:string,subtitle:string }> = ({ dea
   </div>
 
 
-  <Swiper
+  <SwiperComponent
     ref={swiperRef as any}
     spaceBetween={7}
     className="w-full flex"
@@ -89,11 +90,14 @@ const DealList: React.FC<{ deals: any[],title:string,subtitle:string }> = ({ dea
           <div>
          
             <div className="relative">
-              <img
-                src={deal.thumbnail.uri}
-                alt="deal"
-                className="rounded-lg w-full h-auto"
-              />
+            <Image
+  src={deal.thumbnail.uri}
+  alt="deal"
+  className="rounded-lg w-full h-auto"
+  layout="responsive"
+  width={500} // replace with your desired width
+  height={300} // replace with your desired height
+/>
               <div className="absolute bottom-0 left-0 p-4">
                 <button className="bg-[#009E8A] text-white py-1 px-1 rounded flex items-center">
                   <BiShare size={10} />
@@ -111,7 +115,7 @@ const DealList: React.FC<{ deals: any[],title:string,subtitle:string }> = ({ dea
         )}
       </SwiperSlide>
     ))}
-  </Swiper>
+  </SwiperComponent>
 </div>
 
   );
